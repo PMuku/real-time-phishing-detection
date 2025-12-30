@@ -1,2 +1,12 @@
 .env
 node_modules
+
+# Python virtual environments
+.venv/
+venv/
+**/.venv/
+
+# Python junk
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
