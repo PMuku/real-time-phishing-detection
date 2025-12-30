@@ -6,12 +6,19 @@
     "permissions": ["activeTab", "scripting"],
     "host_permissions": ["<all_urls>"],
     "background": {
-        "service_worker": "background/serviceWorker.js"
+        "service_worker": "background/serviceWorker.js",
+        "type": "module"
     },
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
             "js": ["content/content.js"]
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["ml/lexical_model.json"],
+            "matches": ["<all_urls>"]
         }
     ]
     

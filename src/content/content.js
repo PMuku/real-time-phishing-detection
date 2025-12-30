@@ -1,10 +1,18 @@
 const text = document.body.innerText;
-chrome.runtime.sendMessage({ type: 'PAGE_TEXT', payload: text }, (response) => {
-    if (response && response.verdict === 'PHISHING') {
-        console.warn('Phishing page detected. Neutralising content.');
+chrome.runtime.sendMessage({ type: 'PAGE_URL', payload: window.location.href }, (response) => {
+    
+    if (!response) {
+        console.warn("No response from background script.");
+        return;
+    }
+
+    if (response.verdict === 'PHISHING') {
+        console.warn('Phishing page detected. Neutralising content. Confidence:', response.confidence);
         neutralisePage();
+    } else if (response.verdict === 'SUSPICIOUS') {
+        console.warn('Page is suspicious. Confidence:', response.confidence);
     } else {
-        console.log('Page is safe.');
+        console.log('Page is safe. Confidence:', response.confidence);
     }
 });
 
