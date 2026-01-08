@@ -1,5 +1,12 @@
 const text = document.body.innerText;
-chrome.runtime.sendMessage({ type: 'PAGE_URL', payload: window.location.href }, (response) => {
+const pageTitle = document.title;
+
+const payload = {
+    url: window.location.href,
+    title: pageTitle
+};
+
+chrome.runtime.sendMessage({ type: 'PAGE_URL', payload: payload }, (response) => {
     
     if (!response) {
         console.warn("No response from background script.");
@@ -7,12 +14,12 @@ chrome.runtime.sendMessage({ type: 'PAGE_URL', payload: window.location.href }, 
     }
 
     if (response.verdict === 'PHISHING') {
-        console.warn('Phishing page detected. Neutralising content. Confidence:', response.confidence);
+        console.warn('Phishing page detected. Neutralising content. Risk proba :', response.confidence);
         neutralisePage();
     } else if (response.verdict === 'SUSPICIOUS') {
-        console.warn('Page is suspicious. Confidence:', response.confidence);
+        console.warn('Page is suspicious. Risk proba :', response.confidence);
     } else {
-        console.log('Page is safe. Confidence:', response.confidence);
+        console.log('Page is safe. Risk proba:', response.confidence);
     }
 });
 
