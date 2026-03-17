@@ -7,8 +7,8 @@ const ML_THRESHOLDS = {
 };
 
 async function analyzeContent(payload) {
-  const { url, title } = msg.payload;
-  console.log("Analysing URL:", msg.payload);
+  const { url, title } = payload;
+  console.log("Analysing URL:", payload);
 
   // 1. rule engine
   const ruleRes = runHeuristicRules(url, title);
