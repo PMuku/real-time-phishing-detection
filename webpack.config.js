@@ -21,7 +21,8 @@ module.exports = {
 
   // this allows us to use 'import' for the AI library
   experiments: {
-    topLevelAwait: true 
+    topLevelAwait: true,
+    asyncWebAssembly: true
   },
 
   plugins: [

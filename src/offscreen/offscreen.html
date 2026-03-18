@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head><title>Offscreen AI Sandbox</title></head>
+<body>
+  <!--
+    This page is never shown to the user. It exists solely as a persistent
+    execution environment for the Transformer model. Chrome's Offscreen API
+    gives us a hidden background tab that survives beyond the Service Worker's
+    30-second lifespan, so the model stays loaded in RAM.
+  -->
+  <script src="offscreen.bundle.js"></script>
+</body>
+</html>

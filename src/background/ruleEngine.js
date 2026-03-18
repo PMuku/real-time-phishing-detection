@@ -25,7 +25,7 @@ const PROTECTED_BRANDS = {
     "instagram": "instagram.com"
 };
 
-export function runHeuristicRules(url, pageTitle = "") {
+export function runHeuristicRules(url, pageTitle = "", hasPwdField = false) {
     let parsed;
     try {
         parsed = new URL(url);
@@ -54,6 +54,10 @@ export function runHeuristicRules(url, pageTitle = "") {
 
     // login over insecure HTTP.
     if (parsed.protocol === "http:") {
+        if (hasPwdField) {
+            return { action: "BLOCK", reason: "Login form over HTTP" };
+        }
+
         const loginKeywords = ["login", "signin", "bank", "secure", "account", "verify"];
         const hasKeyword = loginKeywords.some(kw => url.includes(kw) || cleanTitle.includes(kw));
         

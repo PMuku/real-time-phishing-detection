@@ -3,7 +3,9 @@ const pageTitle = document.title;
 
 const payload = {
     url: window.location.href,
-    title: pageTitle
+    title: pageTitle,
+    textSnippet: (text || '').substring(0, 1500).replace(/\s+/g, ' ').trim(),
+    hasPwdField: !!document.querySelector('input[type="password"]')
 };
 
 chrome.runtime.sendMessage({ type: 'PAGE_URL', payload: payload }, (response) => {
@@ -118,5 +120,5 @@ function showSusBanner(response = {}) {
     }
 
     // expose helper for manual testing if needed
-    window.__showSuspiciousBanner = showSuspiciousBanner;
+    window.__showSusBanner = showSusBanner;
 }
