@@ -3,16 +3,16 @@
     "version": "1.0",
     "manifest_version": 3,
     "description": "A real-time anti-phishing browser extension.",
-    "permissions": ["activeTab", "scripting"],
+    "permissions": ["activeTab", "scripting", "storage", "offscreen"],
     "host_permissions": ["<all_urls>"],
     "background": {
-        "service_worker": "background/serviceWorker.js",
+        "service_worker": "serviceWorker.bundle.js",
         "type": "module"
     },
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["content/content.js"]
+            "js": ["content.bundle.js"]
         }
     ],
     "web_accessible_resources": [
