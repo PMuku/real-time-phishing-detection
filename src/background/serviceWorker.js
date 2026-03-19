@@ -104,7 +104,6 @@ async function analyzeContent(payload) {
   }
 
   const t3result = await deepInference(textSnippet);
-
   if (!t3result) {
     return {
       verdict: "SUSPICIOUS", confidence: t2confidence, reason: "Deep inference failed or timed out, relying on ML result"
@@ -112,16 +111,16 @@ async function analyzeContent(payload) {
   }
 
   // handle deep inference result from offscreen listener
-  const {_, label, t3confidence} = t3result;
-  if (label === "NEGATIVE" && t3confidence >= ML_THRESHOLDS.DEEP) {
-    const mixed = Number((t2confidence + t3confidence) / 2).toFixed(3);
+  
+  if (t3result.label === "NEGATIVE" && t3result.score >= ML_THRESHOLDS.DEEP) {
+    const mixed = Number((t2confidence + t3result.score) / 2).toFixed(3);
     return {
       verdict: "PHISHING", confidence: mixed,
       reason: "Deep inference indicates negative sentiment with high confidence"
     };
   }
   return {
-    verdict: "SAFE", confidence: Number((t2confidence * (1 - t3confidence)).toFixed(3)),
+    verdict: "SAFE", confidence: Number((t2confidence * (1 - t3result.score)).toFixed(3)),
     reason: "Deep inference does not indicate strong phishing signals"
   };
 }

@@ -16,13 +16,13 @@ chrome.runtime.sendMessage({ type: 'PAGE_URL', payload: payload }, (response) =>
     }
 
     if (response.verdict === 'PHISHING') {
-        console.warn('Phishing page detected. Neutralising content. Risk proba :', response.confidence);
+        console.warn("PHISHING", response);
         neutralisePage();
     } else if (response.verdict === 'SUSPICIOUS') {
-        console.warn('Page is suspicious. Risk proba :', response.confidence);
+        console.warn("SUSPICIOUS", response);
         showSusBanner(response);
     } else {
-        console.log('Page is safe. Risk proba:', response.confidence);
+        console.log("SAFE", response);
     }
 });
 
