@@ -3,7 +3,8 @@ import { runHeuristicRules } from "./ruleEngine.js";
 
 const ML_THRESHOLDS = {
   PHISHING: 0.9,
-  SAFE: 0.1
+  SAFE: 0.1,
+  DEEP: 0.7
 };
 
 async function ensureOffscreen() {
@@ -17,20 +18,38 @@ async function ensureOffscreen() {
 }
 
 async function deepInference(text) {
-  await ensureOffscreen();
+  try {
+    await ensureOffscreen();
 
-  return new Promise((resolve) => {
-    const timer = setTimeout(() => {
-      console.warn("transformer timed out");
-      resolve(null);
-    }, 25000); //25s
-  
-    chrome.runtime.sendMessage(
-      { type: 'DEEP_INFERENCE', text: text }, (response) => {
-        clearTimeout(timer);
-        resolve(response);
+    return await new Promise((resolve) => {
+      const timer = setTimeout(() => {
+        console.warn("transformer timed out");
+        resolve(null);
+      }, 25000); //25s
+    
+      chrome.runtime.sendMessage(
+        { type: 'DEEP_INFERENCE', text: text }, (response) => {
+          clearTimeout(timer);
+
+          if (chrome.runtime.lastError) {
+            console.error("Error in deep inference message:", chrome.runtime.lastError);
+            resolve(null);
+            return;
+          }
+
+          if (!response || !response.success) {
+            console.error("Deep inference failed:", response ? response.error : "No response");
+            resolve(null);
+            return;
+          }
+
+          resolve(response);
+        });
       });
-    });
+    } catch (err) {
+      console.error("Error ensuring offscreen document:", err);
+      return null;
+    }
 }
 
 async function analyzeContent(payload) {
@@ -93,7 +112,18 @@ async function analyzeContent(payload) {
   }
 
   // handle deep inference result from offscreen listener
-  
+  const {_, label, t3confidence} = t3result;
+  if (label === "NEGATIVE" && t3confidence >= ML_THRESHOLDS.DEEP) {
+    const mixed = Number((t2confidence + t3confidence) / 2).toFixed(3);
+    return {
+      verdict: "PHISHING", confidence: mixed,
+      reason: "Deep inference indicates negative sentiment with high confidence"
+    };
+  }
+  return {
+    verdict: "SAFE", confidence: Number((t2confidence * (1 - t3confidence)).toFixed(3)),
+    reason: "Deep inference does not indicate strong phishing signals"
+  };
 }
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {

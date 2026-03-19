@@ -19,6 +19,26 @@ async function getClassifier() {
 }
 
 // listen for deep inference requests from background script
-// chrome.runtime.onMessage.addListener
+chrome.runtime.onMessage.addListener(
+    (msg, sender, sendResponse) => {
+        if (msg.type !== "DEEP_INFERENCE") return false;
+
+        (async () => {
+            try {
+                const classifier = await getClassifier();
+
+                const [{ label, score }] = await classifier(msg.text);
+                console.log('Deep inference result:', { label, score });
+
+                sendResponse({ success: true, label, score });
+            } catch (err) {
+                console.error('Error during deep inference:', err);
+                sendResponse({ success: false, error: err.message });
+            }
+        })();
+
+        return true;
+    }
+);
 
 getClassifier().catch(err => console.error('Error loading model:', err));
