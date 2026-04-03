@@ -38,6 +38,6 @@ npm run build
 Or use `npm run watch` for live-reloading during development
 
 **4. Load into Chrome**
-  i.   Open Google Chrome and navigate to chrome://extensions/
-  ii.  Enable "Developer mode" in the top right corner.
-  iii. Click "Load unpacked" and select the newly generated dist folder (Do not select the root or src folder).
+1. Open Google Chrome and navigate to chrome://extensions/
+2. Enable **Developer mode** in the top right corner.
+3. Click **Load unpacked** and select the newly generated dist folder (Do not select the root or src folder).
