@@ -22,7 +22,7 @@ To run this extension locally or contribute to the codebase, follow these steps:
 
 **1. Clone the repository**
 ```bash
-git clone [https://github.com/PMuku/real-time-phishing-detection.git]
+git clone https://github.com/PMuku/real-time-phishing-detection.git
 cd phishing-detector
 ```
 **2. Install build dependencies**
